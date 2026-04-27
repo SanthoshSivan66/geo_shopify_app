@@ -2,7 +2,7 @@
 
 client_id = "685ff5539ede22d95d035f5e79d4b1af"
 name = "GEO Review Tool"
-application_url = "https://localhost:3000"
+application_url = "https://app.georeviewtool.com"
 embedded = true
 
 [build]
@@ -35,9 +35,9 @@ scopes = "read_products,write_products,read_themes,write_themes,read_content"
 use_legacy_install_flow = false
 
 [auth]
-redirect_urls = [ "https://localhost:3000/api/auth/callback" ]
+redirect_urls = [ "https://app.georeviewtool.com/api/auth/callback" ]
 
 [app_proxy]
-url = "https://localhost:3000/api/proxy"
+url = "https://app.georeviewtool.com/api/proxy"
 subpath = "geo"
 prefix = "apps"
