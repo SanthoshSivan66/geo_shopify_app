@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-gray-100 font-sans antialiased;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white border border-gray-700 shadow-sm rounded-xl;
+  }
+  .neon-border {
+    @apply border-transparent;
+  }
+  .neon-text {
+    @apply text-gray-100;
+  }
+}
+
+/* Custom scrollbar for light UI */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f4f6f8;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

@@ -1,0 +1,11 @@
+api_version = "2026-04"
+uid = "3be2038e-8673-ee40-3a04-e53cf12c5bd1a73e4242"
+
+[[extensions]]
+type = "theme"
+name = "GEO Review Tool - Schema Injection"
+handle = "geo-schema-block"
+
+  [[extensions.targeting]]
+  module = "./blocks/geo-schemas.liquid"
+  target = "head"

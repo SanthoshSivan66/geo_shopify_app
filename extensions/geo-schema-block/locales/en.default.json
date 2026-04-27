@@ -1,0 +1,16 @@
+{
+  "geo_schema_injection": {
+    "name": "GEO Schema Injection",
+    "settings": {
+      "enable_product_schema": {
+        "label": "Enable Product Schema"
+      },
+      "enable_breadcrumb_schema": {
+        "label": "Enable Breadcrumb Schema"
+      },
+      "enable_organization_schema": {
+        "label": "Enable Organization Schema"
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "685ff5539ede22d95d035f5e79d4b1af"
+name = "GEO Review Tool"
+application_url = "https://localhost:3000"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true
+
+[webhooks]
+api_version = "2026-04"
+
+  [webhooks.privacy_compliance]
+  customer_deletion_url = "/webhooks/customers/redact"
+  customer_data_request_url = "/webhooks/customers/data_request"
+  shop_deletion_url = "/webhooks/shop/redact"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app_subscriptions/update" ]
+  uri = "/webhooks/app_subscriptions/update"
+
+[access_scopes]
+# GEO Review Tool scopes
+scopes = "read_products,write_products,read_themes,write_themes,read_content"
+use_legacy_install_flow = false
+
+[auth]
+redirect_urls = [ "https://localhost:3000/api/auth/callback" ]
+
+[app_proxy]
+url = "https://localhost:3000/api/proxy"
+subpath = "geo"
+prefix = "apps"

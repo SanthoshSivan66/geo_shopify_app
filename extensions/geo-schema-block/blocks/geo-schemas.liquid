@@ -1,0 +1,220 @@
+{%- comment -%}
+  GEO Review Tool - Product Schema Block
+  Generates JSON-LD structured data for Product pages
+  to make products discoverable by AI assistants like
+  ChatGPT, Perplexity, and Google Gemini.
+{%- endcomment -%}
+
+{%- if template.name == 'product' and product -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 500 | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | default: shop.name | json }}
+  },
+  {%- if product.featured_image -%}
+  "image": [
+    {%- for image in product.images limit: 5 -%}
+    {{ image | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  {%- endif -%}
+  {%- if product.selected_or_first_available_variant.sku != blank -%}
+  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  {%- endif -%}
+  {%- if product.selected_or_first_available_variant.barcode != blank -%}
+  "gtin": {{ product.selected_or_first_available_variant.barcode | json }},
+  {%- endif -%}
+  {%- if product.type != blank -%}
+  "category": {{ product.type | json }},
+  {%- endif -%}
+  {%- if product.variants.size > 1 -%}
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": {{ product.price_min | money_without_currency | json }},
+    "highPrice": {{ product.price_max | money_without_currency | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "offerCount": {{ product.variants.size }},
+    "availability": {% if product.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}
+  }
+  {%- else -%}
+  "offers": {
+    "@type": "Offer",
+    "price": {{ product.price | money_without_currency | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": {% if product.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+    "url": {{ shop.url | append: product.url | json }},
+    "seller": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }}
+    }
+  }
+  {%- endif -%}
+}
+</script>
+{%- endif -%}
+
+{%- comment -%}
+  Breadcrumb Schema - Shows navigation path for AI bots
+{%- endcomment -%}
+{%- if template.name == 'product' and product -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {{ shop.url | json }}
+    }
+    {%- if product.collections.size > 0 -%}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ product.collections.first.title | json }},
+      "item": {{ shop.url | append: product.collections.first.url | json }}
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ product.title | json }},
+      "item": {{ shop.url | append: product.url | json }}
+    }
+    {%- else -%}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ product.title | json }},
+      "item": {{ shop.url | append: product.url | json }}
+    }
+    {%- endif -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+{%- comment -%}
+  Organization Schema - Store-wide brand identity
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  {%- if shop.description != blank -%}
+  "description": {{ shop.description | json }},
+  {%- endif -%}
+  {%- if shop.email != blank -%}
+  "email": {{ shop.email | json }},
+  {%- endif -%}
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "url": {{ shop.url | append: '/pages/contact' | json }}
+  }
+}
+</script>
+
+{%- comment -%}
+  FAQ Schema (Enterprise) - Auto-generates Q&A from product data
+{%- endcomment -%}
+{%- if template.name == 'product' and product and block.settings.enable_faq_schema -%}
+{%- assign plain_desc = product.description | strip_html | truncate: 300 -%}
+{%- if plain_desc.size > 30 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": {{ "What is " | append: product.title | append: "?" | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ plain_desc | json }}
+      }
+    },
+    {
+      "@type": "Question",
+      "name": {{ "How much does " | append: product.title | append: " cost?" | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ product.title | append: " is priced at " | append: cart.currency.symbol | append: product.price_min | money_without_currency | append: "." | json }}
+      }
+    }
+    {%- if product.variants.size > 1 -%}
+    ,{
+      "@type": "Question",
+      "name": {{ "What options are available for " | append: product.title | append: "?" | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ product.title | append: " comes in " | append: product.variants.size | append: " options including " | append: product.variants.first.title | append: "." | json }}
+      }
+    }
+    {%- endif -%}
+    ,{
+      "@type": "Question",
+      "name": {{ "Is " | append: product.title | append: " in stock?" | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {% if product.available %}{{ "Yes, " | append: product.title | append: " is currently in stock and available for purchase at " | append: shop.name | append: "." | json }}{% else %}{{ product.title | append: " is currently out of stock. Please check back later." | json }}{% endif %}
+      }
+    },
+    {
+      "@type": "Question",
+      "name": {{ "Where can I buy " | append: product.title | append: "?" | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ "You can purchase " | append: product.title | append: " directly from " | append: shop.name | append: " at " | append: shop.url | append: product.url | json }}
+      }
+    }
+  ]
+}
+</script>
+{%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GEO Schema Injection",
+  "target": "head",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_product_schema",
+      "label": "Enable Product Schema",
+      "default": true,
+      "info": "Adds rich product data (name, price, availability) that AI bots can read"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_breadcrumb_schema",
+      "label": "Enable Breadcrumb Schema",
+      "default": true,
+      "info": "Adds navigation structure so AI understands your site layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_organization_schema",
+      "label": "Enable Organization Schema",
+      "default": true,
+      "info": "Adds your brand identity — name, contact, and business details"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_faq_schema",
+      "label": "Enable FAQ Schema (Enterprise)",
+      "default": true,
+      "info": "Auto-generates FAQ structured data from your product info — helps AI answer customer questions"
+    }
+  ]
+}
+{% endschema %}

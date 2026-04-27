@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model Store {
+  id              String   @id @default(cuid())
+  shop            String   @unique
+  geoScore        Int      @default(0)
+  schemaQuality   Int      @default(0)
+  aiBotAccess     Int      @default(0)
+  contentStructure Int     @default(0)
+  conversationalReady Int  @default(0)
+  technicalSpeed  Int      @default(0)
+  metaSocial      Int      @default(0)
+  plan            String   @default("free")
+  schemasEnabled  Boolean  @default(false)
+  lastScan        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  scanHistory     ScanHistory[]
+  competitors     CompetitorScan[]
+}
+
+model ScanHistory {
+  id              String   @id @default(cuid())
+  shop            String
+  geoScore        Int
+  schemaQuality   Int      @default(0)
+  aiBotAccess     Int      @default(0)
+  contentStructure Int     @default(0)
+  conversationalReady Int  @default(0)
+  technicalSpeed  Int      @default(0)
+  metaSocial      Int      @default(0)
+  scannedAt       DateTime @default(now())
+  store           Store    @relation(fields: [shop], references: [shop])
+}
+
+model CompetitorScan {
+  id              String   @id @default(cuid())
+  shop            String
+  competitorUrl   String
+  competitorName  String   @default("")
+  geoScore        Int      @default(0)
+  schemaQuality   Int      @default(0)
+  aiBotAccess     Int      @default(0)
+  contentStructure Int     @default(0)
+  hasProductSchema Boolean @default(false)
+  hasOrgSchema    Boolean  @default(false)
+  hasBreadcrumb   Boolean  @default(false)
+  hasFaqSchema    Boolean  @default(false)
+  hasLlmsTxt      Boolean  @default(false)
+  scannedAt       DateTime @default(now())
+  store           Store    @relation(fields: [shop], references: [shop])
+}
