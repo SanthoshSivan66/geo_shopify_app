@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Activity, Star, CheckCircle, ShieldAlert, Cpu, 
-  Zap, ArrowRight, TrendingUp, Search, BarChart3, Database 
+  Zap, ArrowRight, TrendingUp, Search, BarChart3, Database,
+  X, Clock
 } from "lucide-react";
 import type {
   ActionFunctionArgs,
@@ -498,6 +499,23 @@ export default function GEODashboard() {
   const fetcher = useFetcher<typeof action>();
   const navigate = useNavigate();
 
+  const [cooldown, setCooldown] = useState(0);
+  const [showBanner, setShowBanner] = useState(true);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (cooldown > 0) {
+      interval = setInterval(() => setCooldown((c) => c - 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [cooldown]);
+
+  const handleScan = () => {
+    if (cooldown > 0) return;
+    setCooldown(60);
+    fetcher.submit({ action: "scan" }, { method: "POST" });
+  };
+
   const isScanning = fetcher.state !== "idle" && fetcher.formData?.get("action") === "scan";
   const rateLimitData = fetcher.data?.action === "scan" && (fetcher.data as any)?.rateLimited ? fetcher.data as any : null;
   const scores = fetcher.data?.action === "scan" && fetcher.data?.success
@@ -587,6 +605,35 @@ export default function GEODashboard() {
     <div className="min-h-screen bg-slate-50 text-slate-900 p-6 md:p-10 pb-24 overflow-x-hidden relative">
       <ui-title-bar title="Dashboard" />
       <div className="max-w-5xl mx-auto relative z-10">
+        
+        {/* Onboarding Banner for returning users */}
+        {showBanner && !isFirstVisit && (
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-blue-50/80 border border-blue-200/60 p-4 rounded-xl mb-8 flex justify-between items-start shadow-sm backdrop-blur-sm">
+            <div className="flex gap-4 items-start">
+              <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0">
+                <Zap className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-blue-900 mb-1 text-base">Welcome to GEO Review! 🚀</h3>
+                <p className="text-sm text-blue-800/80 max-w-2xl leading-relaxed">
+                  Crucial step: Don't forget to enable the <span className="font-medium text-blue-900">GEO AI Injector</span> in your Theme Editor. This allows ChatGPT and Google Gemini to actually read your new structured data.
+                </p>
+                <a 
+                  href={`https://${shop}/admin/themes/current/editor?context=apps`} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-900 mt-3 bg-blue-100/50 px-3 py-1.5 rounded-md hover:bg-blue-200/50 transition-colors"
+                >
+                  Open Theme Editor <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+            <button onClick={() => setShowBanner(false)} className="text-blue-400 hover:text-blue-600 p-1 rounded-md hover:bg-blue-100 transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+          </motion.div>
+        )}
+
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 border-b border-slate-200 pb-6">
           <div>
             <h1 className="text-2xl font-semibold mb-1">AI Discoverability Overview</h1>
@@ -595,12 +642,14 @@ export default function GEODashboard() {
             </p>
           </div>
           <button
-            onClick={() => fetcher.submit({ action: "scan" }, { method: "POST" })}
-            disabled={isScanning}
-            className="px-6 py-2 bg-white border border-slate-300 shadow-sm hover:bg-slate-50 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+            onClick={handleScan}
+            disabled={isScanning || cooldown > 0}
+            className="px-6 py-2 bg-white border border-slate-300 shadow-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
           >
             {isScanning ? (
               <><Activity className="w-4 h-4 animate-spin text-slate-500" /> Scanning products...</>
+            ) : cooldown > 0 ? (
+              <><Clock className="w-4 h-4 text-slate-500" /> Wait {cooldown}s</>
             ) : (
               <><Search className="w-4 h-4 text-slate-500" /> Rescan All Products</>
             )}
