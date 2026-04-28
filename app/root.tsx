@@ -1,5 +1,11 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from "react-router";
+import * as Sentry from "@sentry/react-router";
 import tailwindCss from "./tailwind.css?url";
+
+Sentry.init({
+  dsn: "https://173f5d6fa41f297e7544773a4be74cca@o4511263325749248.ingest.de.sentry.io/4511298166653008",
+  tracesSampleRate: 1.0,
+});
 
 export function links() {
   return [
@@ -37,6 +43,27 @@ export default function App() {
       <body>
         <Outlet />
         <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  Sentry.captureException(error);
+  return (
+    <html lang="en">
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <div style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
+          <h1>Something went wrong</h1>
+          <p>The app encountered an error. We've been notified and are looking into it.</p>
+        </div>
         <Scripts />
       </body>
     </html>

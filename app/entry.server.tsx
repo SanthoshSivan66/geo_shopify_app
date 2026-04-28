@@ -5,6 +5,12 @@ import { createReadableStreamFromReadable } from "@react-router/node";
 import { type EntryContext } from "react-router";
 import { isbot } from "isbot";
 import { addDocumentResponseHeaders } from "./shopify.server";
+import * as Sentry from "@sentry/react-router";
+
+Sentry.init({
+  dsn: "https://173f5d6fa41f297e7544773a4be74cca@o4511263325749248.ingest.de.sentry.io/4511298166653008",
+  tracesSampleRate: 1.0,
+});
 
 export const streamTimeout = 5000;
 
@@ -44,6 +50,7 @@ export default async function handleRequest(
           reject(error);
         },
         onError(error) {
+          Sentry.captureException(error);
           responseStatusCode = 500;
           console.error(error);
         },
