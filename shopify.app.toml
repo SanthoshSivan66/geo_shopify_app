@@ -1,13 +1,12 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "685ff5539ede22d95d035f5e79d4b1af"
+client_id = "31b973f1fe781e0a746f0d1e4f4461d5"
 name = "GEO Review Tool"
 application_url = "https://app.georeviewtool.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-include_config_on_deploy = true
 
 [webhooks]
 api_version = "2026-04"
