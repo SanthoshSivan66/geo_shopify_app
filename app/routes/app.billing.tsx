@@ -125,13 +125,13 @@ export default function BillingPage() {
 
              let cardClasses = "";
              if (isActive) {
-               if (isPro) cardClasses = "ring-2 ring-blue-500 border-transparent shadow-[0_8px_30px_rgba(59,130,246,0.15)]";
-               else if (isEnterprise) cardClasses = "ring-2 ring-purple-500 border-transparent shadow-[0_8px_30px_rgba(168,85,247,0.15)]";
-               else cardClasses = "ring-2 ring-slate-900 border-transparent shadow-[0_8px_30px_rgba(0,0,0,0.08)]";
+               if (isPro) cardClasses = "border-2 border-blue-500 shadow-[0_8px_30px_rgba(59,130,246,0.15)]";
+               else if (isEnterprise) cardClasses = "border-2 border-purple-500 shadow-[0_8px_30px_rgba(168,85,247,0.15)]";
+               else cardClasses = "border-2 border-slate-800 shadow-[0_8px_30px_rgba(0,0,0,0.1)]";
              } else {
-               if (isPro) cardClasses = "border border-slate-200/80 hover:border-blue-300 shadow-sm hover:shadow-md";
-               else if (isEnterprise) cardClasses = "border border-slate-200/80 hover:border-purple-300 shadow-sm hover:shadow-md";
-               else cardClasses = "border border-slate-200/80 hover:border-slate-300 shadow-sm hover:shadow-md";
+               if (isPro) cardClasses = "border-2 border-slate-100 hover:border-blue-200 shadow-sm hover:shadow-md";
+               else if (isEnterprise) cardClasses = "border-2 border-slate-100 hover:border-purple-200 shadow-sm hover:shadow-md";
+               else cardClasses = "border-2 border-slate-100 hover:border-slate-200 shadow-sm hover:shadow-md";
              }
 
             return (
