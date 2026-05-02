@@ -83,7 +83,7 @@ export async function createSubscription(
       variables: {
         name: `GEO Review Tool - ${planConfig.name}`,
         returnUrl,
-        test: process.env.NODE_ENV !== "production", // Auto-toggle: test charges in dev, real charges in production
+        test: process.env.NODE_ENV !== "production" || process.env.SHOPIFY_TEST_BILLING === "true", // Use test charges in local dev or when explicitly flagged
         lineItems: [
           {
             plan: {
