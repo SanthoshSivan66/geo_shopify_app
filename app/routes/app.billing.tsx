@@ -108,8 +108,8 @@ export default function BillingPage() {
       <ui-title-bar title="Plans & Billing" />
       <div className="max-w-6xl mx-auto relative z-10 w-full overflow-hidden">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-slate-900">Choose Your Plan</h1>
-          <p className="text-lg text-slate-600 leading-relaxed">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-5 text-slate-900 tracking-tight">Choose Your Plan</h1>
+          <p className="text-lg text-slate-600 leading-relaxed font-medium">
             All plans include the GEO Score Dashboard with full category breakdown. Upgrade to unlock automatic schema injection, competitor intelligence, and advanced AI visibility features.
           </p>
         </div>
@@ -129,51 +129,54 @@ export default function BillingPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`relative rounded-3xl overflow-hidden bg-white shadow-sm flex flex-col ${isActive ? 'ring-2 ring-zinc-900 border-none' : 'border border-slate-200'}`}
+                className={`relative rounded-3xl overflow-hidden bg-white flex flex-col transition-all duration-300 ${isActive ? 'ring-1 ring-zinc-900 shadow-[0_8px_30px_rgb(0,0,0,0.08)]' : 'border border-slate-200/60 shadow-sm hover:shadow-md'}`}
                >
-                 {isActive && (
+                 {isActive && !isEnterprise && !isPro && (
                    <div className="absolute top-0 inset-x-0 h-1 bg-zinc-900" />
                  )}
-                 {isEnterprise && !isActive && (
-                   <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500" />
+                 {isPro && (
+                   <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
+                 )}
+                 {isEnterprise && (
+                   <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-fuchsia-500 to-purple-600" />
                  )}
                  
                  <div className="p-8 grow flex flex-col">
                    <div className="flex justify-between items-start mb-6">
                      <div>
                        <div className="flex items-center gap-2 mb-2">
-                         {planId === "free" ? <Settings className="w-5 h-5 text-slate-500" /> : isPro ? <Zap className="w-5 h-5 text-yellow-500" /> : <Building2 className="w-5 h-5 text-purple-600" />}
-                         <h3 className="text-xl font-bold text-slate-900">{plan.name}</h3>
+                         {planId === "free" ? <Settings className="w-5 h-5 text-slate-400" /> : isPro ? <Zap className="w-5 h-5 text-blue-500" /> : <Building2 className="w-5 h-5 text-purple-500" />}
+                         <h3 className="text-xl font-bold text-slate-900 tracking-tight">{plan.name}</h3>
                        </div>
-                       <div className="flex items-baseline gap-1">
-                         <span className="text-4xl font-black text-slate-900">{plan.price === 0 ? "Free" : `$${plan.price}`}</span>
+                       <div className="flex items-baseline gap-1 mt-1">
+                         <span className="text-4xl font-extrabold text-slate-900 tracking-tight">{plan.price === 0 ? "Free" : `$${plan.price}`}</span>
                          {plan.price > 0 && <span className="text-slate-500 font-medium">/mo</span>}
                        </div>
                      </div>
                      {isActive && (
-                       <span className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-full border border-slate-200">Current</span>
+                       <span className="px-3 py-1 bg-slate-50 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-full border border-slate-200/60 shadow-sm">Current</span>
                      )}
                    </div>
 
-                   <ul className="space-y-4 mb-8 flex-grow">
+                   <ul className="space-y-4 mb-8 flex-grow mt-2">
                      {plan.features.map((feature, i) => (
-                       <li key={i} className="flex gap-3 text-slate-600 text-sm leading-relaxed">
-                         <CheckCircle2 className={`w-5 h-5 shrink-0 ${isEnterprise ? 'text-purple-600' : isPro ? 'text-blue-600' : 'text-slate-400'}`} />
-                         <span>{feature}</span>
+                       <li key={i} className="flex gap-3 text-slate-600 text-sm leading-relaxed items-start">
+                         <CheckCircle2 className={`w-5 h-5 shrink-0 mt-0.5 ${isEnterprise ? 'text-purple-500' : isPro ? 'text-blue-500' : 'text-slate-300'}`} />
+                         <span className="font-medium text-slate-700">{feature}</span>
                        </li>
                      ))}
                    </ul>
 
                    {/* Action Buttons */}
                    {isActive ? (
-                     <button className="w-full py-3 px-6 bg-slate-50 text-slate-400 rounded-xl font-semibold cursor-default border border-slate-200">
+                     <button className="w-full py-3.5 px-6 bg-slate-50 text-slate-400 rounded-xl font-semibold cursor-default border border-slate-200/60 shadow-inner">
                         Active Plan
                      </button>
                    ) : isUpgrade ? (
                      <button
                        onClick={() => fetcher.submit({ action: "upgrade", plan: planId }, { method: "POST" })}
                        disabled={isPending}
-                       className={`w-full py-3 px-6 rounded-xl font-semibold transition-all flex justify-center items-center gap-2 shadow-sm ${isEnterprise ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white' : 'bg-zinc-900 hover:bg-zinc-800 text-white'}`}
+                       className={`w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex justify-center items-center gap-2 shadow-sm ${isEnterprise ? 'bg-zinc-900 hover:bg-zinc-800 text-white' : 'bg-zinc-900 hover:bg-zinc-800 text-white'}`}
                      >
                        {isPending ? <Activity className="w-5 h-5 animate-spin" /> : null}
                        {isPending ? "Processing..." : `Upgrade to ${plan.name}`}
@@ -186,24 +189,24 @@ export default function BillingPage() {
         </div>
 
         {/* Footer info */}
-        <div className="mt-16 grid md:grid-cols-2 gap-8 text-center md:text-left">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-            <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center shrink-0 border border-slate-200">
-               <CreditCard className="w-6 h-6 text-slate-700" />
+        <div className="mt-16 grid md:grid-cols-2 gap-8 text-left">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 flex items-start gap-5 relative overflow-hidden transition-all hover:shadow-md">
+            <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+               <CreditCard className="w-5 h-5 text-slate-700" />
             </div>
-            <div>
-              <h4 className="font-semibold text-slate-900 mb-1">Secure Billing</h4>
-              <p className="text-sm text-slate-600">All payments are securely processed through Shopify. Cancel anytime from your active subscriptions.</p>
+            <div className="pt-1">
+              <h4 className="font-semibold text-slate-900 mb-1.5 text-base tracking-tight">Secure Billing</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">All payments are securely processed through Shopify. Cancel anytime from your active subscriptions.</p>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-            <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center shrink-0 border border-emerald-100">
-               <ShieldCheck className="w-6 h-6 text-emerald-600" />
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/60 flex items-start gap-5 relative overflow-hidden transition-all hover:shadow-md">
+            <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+               <ShieldCheck className="w-5 h-5 text-slate-700" />
             </div>
-            <div>
-              <h4 className="font-semibold text-slate-900 mb-1">Risk-Free Trial</h4>
-              <p className="text-sm text-slate-600">Not sure which plan to choose? Try the Pro plan to instantly inject schemas and see the immediate SEO improvements.</p>
+            <div className="pt-1">
+              <h4 className="font-semibold text-slate-900 mb-1.5 text-base tracking-tight">Risk-Free Trial</h4>
+              <p className="text-sm text-slate-500 leading-relaxed">Not sure which plan to choose? Try the Pro plan to instantly inject schemas and see the immediate SEO improvements.</p>
             </div>
           </div>
         </div>
