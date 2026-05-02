@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { redirect } from "react-router";
 import type {
   ActionFunctionArgs,
@@ -57,8 +58,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       );
 
       if (result?.confirmationUrl) {
-        // Server-side redirect to Shopify's billing confirmation page
-        throw redirect(result.confirmationUrl);
+        // Return URL to frontend to break out of the Shopify App Bridge iframe
+        return { action: "upgrade", success: true, confirmationUrl: result.confirmationUrl };
       }
 
       return { action: "upgrade", success: true };
@@ -84,7 +85,13 @@ export default function BillingPage() {
   const fetcher = useFetcher<typeof action>();
   const shopify = useAppBridge();
 
-  const isPending = fetcher.state !== "idle";
+  const isPending = fetcher.state !== "idle" || (fetcher.data?.action === "upgrade" && fetcher.data?.success);
+
+  useEffect(() => {
+    if (fetcher.data?.action === "upgrade" && fetcher.data?.success && fetcher.data?.confirmationUrl) {
+      window.open(fetcher.data.confirmationUrl, "_top");
+    }
+  }, [fetcher.data]);
 
   if (fetcher.data?.action === "upgrade" && fetcher.data?.error) {
     shopify.toast.show(`Upgrade failed: ${fetcher.data.error}`);
