@@ -123,24 +123,25 @@ export default function BillingPage() {
             const isPro = planId === "pro";
             const isEnterprise = planId === "enterprise";
 
+             let cardClasses = "";
+             if (isActive) {
+               if (isPro) cardClasses = "ring-2 ring-blue-500 border-transparent shadow-[0_8px_30px_rgba(59,130,246,0.15)]";
+               else if (isEnterprise) cardClasses = "ring-2 ring-purple-500 border-transparent shadow-[0_8px_30px_rgba(168,85,247,0.15)]";
+               else cardClasses = "ring-2 ring-slate-900 border-transparent shadow-[0_8px_30px_rgba(0,0,0,0.08)]";
+             } else {
+               if (isPro) cardClasses = "border border-slate-200/80 hover:border-blue-300 shadow-sm hover:shadow-md";
+               else if (isEnterprise) cardClasses = "border border-slate-200/80 hover:border-purple-300 shadow-sm hover:shadow-md";
+               else cardClasses = "border border-slate-200/80 hover:border-slate-300 shadow-sm hover:shadow-md";
+             }
+
             return (
                <motion.div
                 key={planId}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`relative rounded-3xl overflow-hidden bg-white flex flex-col transition-all duration-300 ${isActive ? 'ring-1 ring-zinc-900 shadow-[0_8px_30px_rgb(0,0,0,0.08)]' : 'border border-slate-200/60 shadow-sm hover:shadow-md'}`}
+                className={`relative rounded-3xl overflow-hidden bg-white flex flex-col transition-all duration-300 ${cardClasses}`}
                >
-                 {isActive && !isEnterprise && !isPro && (
-                   <div className="absolute top-0 inset-x-0 h-1 bg-zinc-900" />
-                 )}
-                 {isPro && (
-                   <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
-                 )}
-                 {isEnterprise && (
-                   <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-fuchsia-500 to-purple-600" />
-                 )}
-                 
                  <div className="p-8 grow flex flex-col">
                    <div className="flex justify-between items-start mb-6">
                      <div>
