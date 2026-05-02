@@ -608,28 +608,41 @@ export default function GEODashboard() {
         
         {/* Onboarding Banner for returning users */}
         {showBanner && !isFirstVisit && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-blue-50/80 border border-blue-200/60 p-4 rounded-xl mb-8 flex justify-between items-start shadow-sm backdrop-blur-sm">
-            <div className="flex gap-4 items-start">
-              <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0">
-                <Zap className="w-5 h-5" />
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl mb-8 flex justify-between items-start shadow-xl relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-indigo-500"></div>
+            <div className="flex gap-5 items-start pl-2">
+              <div className="w-12 h-12 bg-white/10 border border-white/10 text-white rounded-full flex items-center justify-center shrink-0 shadow-sm backdrop-blur-md">
+                <Cpu className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="font-semibold text-blue-900 mb-1 text-base">Welcome to GEO Review! 🚀</h3>
-                <p className="text-sm text-blue-800/80 max-w-2xl leading-relaxed">
-                  Crucial step: Don't forget to enable the <span className="font-medium text-blue-900">GEO AI Injector</span> in your Theme Editor. This allows ChatGPT and Google Gemini to actually read your new structured data.
+              <div className="pt-1">
+                <h3 className="font-semibold text-white mb-1.5 text-lg tracking-tight">Theme Integration Required</h3>
+                <p className="text-sm text-zinc-400 max-w-2xl leading-relaxed mb-5">
+                  To ensure AI engines can index your structured data, you must explicitly enable the <strong className="text-white font-medium">GEO AI Injector</strong> app block within your live Shopify theme editor.
                 </p>
-                <a 
-                  href={`https://${shop}/admin/themes/current/editor?context=apps`} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-900 mt-3 bg-blue-100/50 px-3 py-1.5 rounded-md hover:bg-blue-200/50 transition-colors"
-                >
-                  Open Theme Editor <ArrowRight className="w-3.5 h-3.5" />
-                </a>
+                <div className="flex items-center gap-4">
+                  <a 
+                    href={`https://${shop}/admin/themes/current/editor?context=apps`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-zinc-900 bg-white hover:bg-zinc-100 px-5 py-2.5 rounded-lg transition-all shadow-sm"
+                  >
+                    Configure Theme <ArrowRight className="w-4 h-4" />
+                  </a>
+                  <button 
+                    onClick={() => setShowBanner(false)} 
+                    className="text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </div>
             </div>
-            <button onClick={() => setShowBanner(false)} className="text-blue-400 hover:text-blue-600 p-1 rounded-md hover:bg-blue-100 transition-colors">
-              <X className="w-5 h-5" />
+            <button onClick={() => setShowBanner(false)} className="text-zinc-500 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors absolute top-4 right-4">
+              <X className="w-4 h-4" />
             </button>
           </motion.div>
         )}
