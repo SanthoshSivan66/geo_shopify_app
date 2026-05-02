@@ -121,7 +121,7 @@ import { motion } from "framer-motion";
 import { 
   Lock, ArrowRight, Code, Database, Building2, 
   Navigation, MessageSquare, FileText, CheckCircle2, PauseCircle,
-  Settings, Activity
+  Settings, Activity, Zap
 } from "lucide-react";
 
 export default function SchemasPage() {
@@ -293,8 +293,14 @@ export default function SchemasPage() {
               <Settings className="w-4 h-4 text-slate-400" /> Active Plan
             </h3>
             <div className="flex items-center gap-3 mb-2">
-               <span className={`px-3 py-1 rounded-full text-sm font-medium ${plan === 'enterprise' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-slate-100 text-slate-800 border border-slate-200'}`}>
-                 {plan === 'enterprise' ? '🚀 Enterprise' : '⚡ Pro'}
+               <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-semibold tracking-wide ${plan === 'enterprise' ? 'bg-white text-purple-700 border border-purple-200/60 shadow-sm ring-1 ring-purple-100' : plan === 'pro' ? 'bg-white text-blue-700 border border-blue-200/60 shadow-sm ring-1 ring-blue-100' : 'bg-white text-slate-700 border border-slate-200/60 shadow-sm ring-1 ring-slate-100'}`}>
+                 {plan === 'enterprise' ? (
+                   <><Building2 className="w-4 h-4 text-purple-500" /> Enterprise</>
+                 ) : plan === 'pro' ? (
+                   <><Zap className="w-4 h-4 text-blue-500" /> Pro</>
+                 ) : (
+                   <><Settings className="w-4 h-4 text-slate-400" /> Free</>
+                 )}
                </span>
             </div>
             <p className="text-sm text-slate-500 mt-4 leading-relaxed">
