@@ -4,7 +4,7 @@ import type {
   HeadersFunction,
   LoaderFunctionArgs,
 } from "react-router";
-import { useLoaderData, useFetcher } from "react-router";
+import { useLoaderData, useFetcher, Link } from "react-router";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
@@ -99,9 +99,9 @@ export default function OptimizePage() {
           <p className="text-base text-slate-600 mb-10 leading-relaxed">
             Auto-Optimize scans all your products and fixes SEO issues with one click. Missing titles, descriptions, and image alt text are generated automatically to boost your GEO score to 90+.
           </p>
-          <a href="/app/billing" className="inline-flex items-center gap-3 px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-xl shadow-sm transition-transform hover:-translate-y-1">
+          <Link to="/app/billing" className="inline-flex items-center gap-3 px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-xl shadow-sm transition-transform hover:-translate-y-1">
             Upgrade to Pro — $7.99/mo <ArrowRight className="w-5 h-5" />
-          </a>
+          </Link>
         </div>
       </div>
     );

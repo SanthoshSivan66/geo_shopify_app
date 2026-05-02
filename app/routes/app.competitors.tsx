@@ -9,7 +9,7 @@ import type {
   HeadersFunction,
   LoaderFunctionArgs,
 } from "react-router";
-import { useLoaderData, useFetcher } from "react-router";
+import { useLoaderData, useFetcher, Link } from "react-router";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
@@ -273,9 +273,9 @@ export default function CompetitorsPage() {
           <p className="text-base text-slate-600 mb-10 leading-relaxed">
             Compare your GEO score against any competitor store. See exactly what schemas they have, whether AI bots can access their store, and how you stack up — so you can stay ahead.
           </p>
-          <a href="/app/billing" className="inline-flex items-center gap-3 px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-xl shadow-sm transition-transform hover:-translate-y-1">
+          <Link to="/app/billing" className="inline-flex items-center gap-3 px-8 py-3 bg-zinc-900 hover:bg-zinc-800 text-white font-semibold rounded-xl shadow-sm transition-transform hover:-translate-y-1">
             Upgrade to Enterprise — $19.99/mo <ArrowRight className="w-5 h-5" />
-          </a>
+          </Link>
         </div>
       </div>
     );

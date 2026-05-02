@@ -3,7 +3,7 @@ import type {
   HeadersFunction,
   LoaderFunctionArgs,
 } from "react-router";
-import { useLoaderData, useFetcher } from "react-router";
+import { useLoaderData, useFetcher, Link } from "react-router";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
@@ -167,9 +167,9 @@ export default function SchemasPage() {
             </div>
           </div>
 
-          <a href="/app/billing" className="inline-flex items-center gap-3 px-8 py-4 bg-primary hover:bg-blue-600 text-white font-semibold rounded-full shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-transform hover:-translate-y-1">
+          <Link to="/app/billing" className="inline-flex items-center gap-3 px-8 py-4 bg-primary hover:bg-blue-600 text-white font-semibold rounded-full shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-transform hover:-translate-y-1">
             View Plans <ArrowRight className="w-5 h-5" />
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -341,9 +341,9 @@ export default function SchemasPage() {
               <p className="text-sm text-zinc-400 mb-4">
                 Get FAQ schemas, llms.txt, AI bot access monitoring, and competitor comparison for just $19.99/mo.
               </p>
-              <a href="/app/billing" className="block w-full text-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors border border-white/10">
+              <Link to="/app/billing" className="block w-full text-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors border border-white/10">
                 View Plans
-              </a>
+              </Link>
             </div>
           )}
         </div>
